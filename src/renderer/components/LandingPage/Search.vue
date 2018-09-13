@@ -12,6 +12,11 @@
                 {{type.key}}
             </option>
         </select>
+        <input
+            type="text"
+            :value="query"
+            @input="CHANGE_QUERY($event.target.value)"
+        >
     </div>
 </template>
 
@@ -26,11 +31,12 @@
             }
         },
         methods: {
-            ...mapMutations('Main', ['CHANGE_SEARCH_TYPE'])
+            ...mapMutations('Main', ['CHANGE_SEARCH_TYPE', 'CHANGE_QUERY'])
         },
         computed: {
             ...mapState('Main', {
-                searchType: ({searchType}) => searchType
+                searchType: ({searchType}) => searchType,
+                query: ({query}) => query
             })
         }
     }

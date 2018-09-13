@@ -1,6 +1,13 @@
 import {SEARCH_TYPES} from '../../helpers/constants';
 
 const state = {
+    query: '',
+    appliedQuery: {
+        citation: '',
+        substance: '',
+        target: '',
+        askEntellect: ''
+    },
     searchType: {
         key: 'Citation',
         value: 'citation'
@@ -9,7 +16,11 @@ const state = {
 
 const mutations = {
     CHANGE_SEARCH_TYPE(state, searchTypeKey) {
-        state.searchType = SEARCH_TYPES.find(({key}) => searchTypeKey === key);
+        const {value} = state.searchType = SEARCH_TYPES.find(({key}) => searchTypeKey === key);
+        state.query = state.appliedQuery[value];
+    },
+    CHANGE_QUERY(state, query) {
+        state.query = query;
     }
 };
 
