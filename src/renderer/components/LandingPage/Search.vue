@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="title">{{searchType.key}}</div>
+        <div class="title">{{results.totalHits}}</div>
         <select
             :value="searchType.key"
             @change="CHANGE_SEARCH_TYPE($event.target.value)"
@@ -17,26 +18,29 @@
             :value="query"
             @input="CHANGE_QUERY($event.target.value)"
         >
+        <button @click="getResults()">GET RESULTS</button>
     </div>
 </template>
 
 <script>
-    import {mapMutations, mapState} from 'vuex';
-    import {SEARCH_TYPES} from '../../helpers/constants';
+    import {mapMutations, mapState, mapActions} from 'vuex';
+    import {constants} from '../../helpers';
 
     export default {
         data() {
             return {
-                searchTypes: SEARCH_TYPES
+                searchTypes: constants.SEARCH_TYPES
             }
         },
         methods: {
-            ...mapMutations('Main', ['CHANGE_SEARCH_TYPE', 'CHANGE_QUERY'])
+            ...mapMutations('Main', ['CHANGE_SEARCH_TYPE', 'CHANGE_QUERY']),
+            ...mapActions('Main', ['getResults'])
         },
         computed: {
             ...mapState('Main', {
                 searchType: ({searchType}) => searchType,
-                query: ({query}) => query
+                query: ({query}) => query,
+                results: ({searchType, results}) => results[searchType.value] || {}
             })
         }
     }
