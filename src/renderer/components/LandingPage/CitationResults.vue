@@ -48,11 +48,14 @@
 </template>
 
 <script>
-    import {mapMutations, mapState, mapActions} from 'vuex';
-    import {constants} from '../../helpers';
+    import {mapState} from 'vuex';
 
     export default {
-        props: ['results']
+        computed: {
+            ...mapState('Citation', {
+                results: ({results}) => results.entities
+            })
+        }
     }
 </script>
 

@@ -1,10 +1,9 @@
 <template>
     <div>
         <div class="title">{{searchType.key}}</div>
-        <div class="title">{{results.totalHits}}</div>
         <select
             :value="searchType.key"
-            @change="CHANGE_SEARCH_TYPE($event.target.value)"
+            @change="changeSearchType($event.target.value)"
         >
             <option
                 v-for="type in searchTypes"
@@ -19,27 +18,14 @@
             @input="CHANGE_QUERY($event.target.value)"
         >
         <button @click="getResults()">GET RESULTS</button>
-        <citation-results
-            v-if="searchType.key === 'Citation'"
-            v-bind:results="results.entities"
-        ></citation-results>
-        <substance-results
-            v-else-if="searchType.key === 'Substance'"
-            v-bind:results="results.entities"
-        ></substance-results>
-        <target-results
-            v-else
-            v-bind:results="results.entities"
-        ></target-results>
+        <results v-bind:searchType="searchType.key"></results>
     </div>
 </template>
 
 <script>
     import {mapMutations, mapState, mapActions} from 'vuex';
     import {constants} from '../../helpers';
-    import CitationResults from './CitationResults';
-    import SubstanceResults from './SubstanceResults';
-    import TargetResults from './TargetResults';
+    import Results from './Results';
 
     export default {
         data() {
@@ -48,20 +34,17 @@
             }
         },
         methods: {
-            ...mapMutations('Main', ['CHANGE_SEARCH_TYPE', 'CHANGE_QUERY']),
-            ...mapActions('Main', ['getResults'])
+            ...mapMutations('Main', ['CHANGE_QUERY']),
+            ...mapActions('Main', ['changeSearchType', 'getResults'])
         },
         computed: {
             ...mapState('Main', {
                 searchType: ({searchType}) => searchType,
-                query: ({query}) => query,
-                results: ({searchType, results}) => results[searchType.value] || {}
+                query: ({query}) => query
             })
         },
         components: {
-            CitationResults,
-            SubstanceResults,
-            TargetResults
+            Results
         }
     }
 </script>
