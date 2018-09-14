@@ -48,22 +48,35 @@ const mutations = {
 };
 
 const actions = {
-    getResults({commit, state}) {
-        const {query, searchType} = state;
-        const payload = {
+    async getResults({commit, state}) {
+        let {query, searchType} = state;
+        let payload = {
             queryKey: searchType.value,
             queryValue: query
         };
 
         commit('START_LOADING');
-        api
-            .searchResults(payload)
-            .then(response => {
-                commit('CHANGE_APPLIED_QUERY', query);
-                commit('RESULTS_SUCCEEDED', response);
-                commit('STOP_LOADING');
-            })
-            .catch(e => commit('ERROR', e.toString()));
+
+        try {
+            if (searchType.value === 'askEntellect') {
+                const response = await api.searchAskEntellect(query);
+
+                payload = {
+                    queryKey: response.entity.toLowerCase(),
+                    queryValue: response.query
+                };
+            }
+
+            const response = await api.searchResults(payload);
+
+            commit('CHANGE_APPLIED_QUERY', payload.queryValue);
+            commit('CHANGE_QUERY', payload.queryValue);
+            commit('RESULTS_SUCCEEDED', response);
+            commit('STOP_LOADING');
+        } catch (e) {
+            commit('ERROR', e.toString());
+        }
+
     }
 };
 

@@ -19,12 +19,27 @@
             @input="CHANGE_QUERY($event.target.value)"
         >
         <button @click="getResults()">GET RESULTS</button>
+        <citation-results
+            v-if="searchType.key === 'Citation'"
+            v-bind:results="results.entities"
+        ></citation-results>
+        <substance-results
+            v-else-if="searchType.key === 'Substance'"
+            v-bind:results="results.entities"
+        ></substance-results>
+        <target-results
+            v-else
+            v-bind:results="results.entities"
+        ></target-results>
     </div>
 </template>
 
 <script>
     import {mapMutations, mapState, mapActions} from 'vuex';
     import {constants} from '../../helpers';
+    import CitationResults from './CitationResults';
+    import SubstanceResults from './SubstanceResults';
+    import TargetResults from './TargetResults';
 
     export default {
         data() {
@@ -42,6 +57,11 @@
                 query: ({query}) => query,
                 results: ({searchType, results}) => results[searchType.value] || {}
             })
+        },
+        components: {
+            CitationResults,
+            SubstanceResults,
+            TargetResults
         }
     }
 </script>
