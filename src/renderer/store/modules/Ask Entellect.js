@@ -37,26 +37,19 @@ const actions = {
         commit('Main/CHANGE_QUERY', state.appliedQuery, {root: true});
     },
     async getResults({commit, state}, query) {
-        let payload = {
-            queryKey: 'askEntellect',
-            queryValue: query
+        const payload = {
+            queryKey: 'target',
+            queryValue: query,
+            currentPage: state.pagination.currentPage
         };
 
         commit('START_LOADING');
 
         try {
-            const askEntellectResponse = await api.searchAskEntellect(query);
-
-            payload = {
-                queryKey: askEntellectResponse.entity.toLowerCase(),
-                queryValue: askEntellectResponse.query,
-                currentPage: state.pagination.currentPage
-            };
-
             const response = await api.searchResults(payload);
 
-            commit('CHANGE_APPLIED_QUERY', payload.queryValue);
-            commit('Main/CHANGE_QUERY', payload.queryValue, {root: true});
+            commit('CHANGE_APPLIED_QUERY', query);
+            commit('Main/CHANGE_QUERY', query, {root: true});
             commit('RESULTS_SUCCEEDED', response);
             commit('STOP_LOADING');
         } catch (e) {
@@ -72,11 +65,19 @@ const actions = {
             };
 
             commit('CHANGE_PAGE', payload);
-            await dispatch('getResults', query);
 
-            payload.maxPage = Math.ceil(state.results.totalHits / 20);
+            try {
+                commit('START_LOADING');
+                const askEntellectResponse = await api.searchAskEntellect(query);
 
-            commit('CHANGE_PAGE', payload);
+                await dispatch('getResults', askEntellectResponse.query);
+
+                payload.maxPage = Math.ceil(state.results.totalHits / 20);
+
+                commit('CHANGE_PAGE', payload);
+            } catch (e) {
+                commit('ERROR', e.toString());
+            }
         }
     },
     async changePage({commit, state, dispatch}, newPage) {
