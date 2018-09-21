@@ -3,14 +3,12 @@ import {api} from '../../helpers';
 const state = {
     appliedQuery: '',
     results: {},
+    suggestions: [],
     loading: false,
     error: ''
 };
 
 const mutations = {
-    CHANGE_QUERY(state, query) {
-        state.query = query;
-    },
     CHANGE_APPLIED_QUERY(state, query) {
         state.appliedQuery = query;
     },
@@ -25,6 +23,9 @@ const mutations = {
     },
     ERROR(state, error) {
         state.error = error;
+    },
+    SUGGESTIONS_SUCCEEDED(state, suggestions) {
+        state.suggestions = suggestions;
     }
 };
 
@@ -50,6 +51,20 @@ const actions = {
             commit('ERROR', e.toString());
         }
 
+    },
+    async changeQuery({commit}, query) {
+        if (query.length > 2) {
+            try {
+                commit('START_LOADING');
+
+                const {values} = await api.searchSuggestions(query);
+
+                commit('SUGGESTIONS_SUCCEEDED', values);
+                commit('STOP_LOADING');
+            } catch (e) {
+                commit('ERROR', e.toString());
+            }
+        }
     }
 };
 

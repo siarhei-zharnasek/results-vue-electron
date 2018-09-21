@@ -22,7 +22,7 @@ const api = {
         console.log(createRelatedInformationQuery(queryValue));
         return requestWrapper(createRelatedInformationQuery(queryValue));
     },
-    searchSuggestions({query}) {
+    searchSuggestions(query) {
         console.log(createSuggestionsQuery(query));
         return requestWrapper(createSuggestionsQuery(query));
     },

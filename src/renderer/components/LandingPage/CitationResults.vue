@@ -2,7 +2,7 @@
     <div>
         <div
             class="container"
-            v-for="result in results"
+            v-for="result in resultsData"
         >
             <div class="block">{{result.title}}</div>
             <div class="block">
@@ -48,14 +48,8 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
-
     export default {
-        computed: {
-            ...mapState('Citation', {
-                results: ({results}) => results.entities
-            })
-        }
+        props: ['resultsData']
     }
 </script>
 

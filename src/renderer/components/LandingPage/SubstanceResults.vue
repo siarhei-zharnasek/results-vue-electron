@@ -2,7 +2,7 @@
     <div>
         <div
             class="container"
-            v-for="result in results"
+            v-for="result in resultsData"
         >
             <div class="block">{{result.displayName.name}}</div>
             <div class="block">
@@ -32,14 +32,8 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
-
     export default {
-        computed: {
-            ...mapState('Substance', {
-                results: ({results}) => results.entities
-            })
-        }
+        props: ['resultsData']
     }
 </script>
 

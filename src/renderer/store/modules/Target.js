@@ -8,9 +8,6 @@ const state = {
 };
 
 const mutations = {
-    CHANGE_QUERY(state, query) {
-        state.query = query;
-    },
     CHANGE_APPLIED_QUERY(state, query) {
         state.appliedQuery = query;
     },

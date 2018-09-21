@@ -12,18 +12,28 @@
                 {{type.key}}
             </option>
         </select>
-        <input
-            type="text"
-            :value="query"
-            @input="CHANGE_QUERY($event.target.value)"
-        >
+        <div>
+            <input
+                type="text"
+                :value="query"
+                @input="changeQuery($event.target.value)"
+            >
+            <div
+                v-for="suggestion in suggestions"
+                @click="getResults(suggestion)"
+            >{{suggestion}}</div>
+        </div>
         <button @click="getResults()">GET RESULTS</button>
-        <results v-bind:searchType="searchType.key"></results>
+        <div>{{resultsData.totalHits}}</div>
+        <results
+            v-bind:searchType="searchType.key"
+            v-bind:resultsData="resultsData.entities"
+        ></results>
     </div>
 </template>
 
 <script>
-    import {mapMutations, mapState, mapActions} from 'vuex';
+    import {mapState, mapActions} from 'vuex';
     import {constants} from '../../helpers';
     import Results from './Results';
 
@@ -34,14 +44,21 @@
             }
         },
         methods: {
-            ...mapMutations('Main', ['CHANGE_QUERY']),
-            ...mapActions('Main', ['changeSearchType', 'getResults'])
+            ...mapActions('Main', ['changeSearchType', 'getResults', 'changeQuery'])
         },
         computed: {
             ...mapState('Main', {
                 searchType: ({searchType}) => searchType,
                 query: ({query}) => query
-            })
+            }),
+            resultsData() {
+                const {key} = this.searchType;
+                return this.$store.state[key].results;
+            },
+            suggestions() {
+                const {key} = this.searchType;
+                return this.$store.state[key].suggestions;
+            }
         },
         components: {
             Results

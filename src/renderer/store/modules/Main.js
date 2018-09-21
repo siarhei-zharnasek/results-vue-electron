@@ -1,4 +1,4 @@
-import {constants, api} from '../../helpers';
+import {constants} from '../../helpers';
 
 const state = {
     query: '',
@@ -18,12 +18,19 @@ const mutations = {
 };
 
 const actions = {
-    changeSearchType({commit, state, dispatch}, searchTypeKey) {
+    changeSearchType({commit, dispatch}, searchTypeKey) {
         commit('CHANGE_SEARCH_TYPE', searchTypeKey);
         dispatch(`${searchTypeKey}/changeSearchType`, null, {root: true});
     },
-    getResults({state, dispatch}) {
-        dispatch(`${state.searchType.key}/getResults`, state.query, {root: true});
+    getResults({state, dispatch}, query = state.query) {
+        dispatch(`${state.searchType.key}/getResults`, query, {root: true});
+    },
+    changeQuery({commit, state, dispatch}, query) {
+        commit('CHANGE_QUERY', query);
+
+        if (state.searchType.key === 'Substance') {
+            dispatch('Substance/changeQuery', query, {root: true});
+        }
     }
 };
 
