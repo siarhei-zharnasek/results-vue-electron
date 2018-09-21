@@ -23,7 +23,7 @@ const actions = {
         dispatch(`${searchTypeKey}/changeSearchType`, null, {root: true});
     },
     getResults({state, dispatch}, query = state.query) {
-        dispatch(`${state.searchType.key}/getResults`, query, {root: true});
+        dispatch(`${state.searchType.key}/changeResults`, query, {root: true});
     },
     changeQuery({commit, state, dispatch}, query) {
         commit('CHANGE_QUERY', query);
@@ -31,6 +31,9 @@ const actions = {
         if (state.searchType.key === 'Substance') {
             dispatch('Substance/changeQuery', query, {root: true});
         }
+    },
+    changePage({state, dispatch}, page) {
+        dispatch(`${state.searchType.key}/changePage`, page, {root: true});
     }
 };
 

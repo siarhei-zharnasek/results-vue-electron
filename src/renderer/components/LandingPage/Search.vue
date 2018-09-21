@@ -21,10 +21,27 @@
             <div
                 v-for="suggestion in suggestions"
                 @click="getResults(suggestion)"
-            >{{suggestion}}</div>
+            >
+                {{suggestion}}
+            </div>
         </div>
         <button @click="getResults()">GET RESULTS</button>
         <div>{{resultsData.totalHits}}</div>
+        <div v-if="pagination.maxPage">
+            <span
+                v-if="pagination.currentPage > 1"
+                @click="changePage(pagination.currentPage - 1)"
+            >
+                <
+            </span>
+            <span>{{pagination.currentPage}} / {{pagination.maxPage}}</span>
+            <span
+                v-if="pagination.currentPage < pagination.maxPage"
+                @click="changePage(pagination.currentPage + 1)"
+            >
+                >
+            </span>
+        </div>
         <results
             v-bind:searchType="searchType.key"
             v-bind:resultsData="resultsData.entities"
@@ -44,7 +61,7 @@
             }
         },
         methods: {
-            ...mapActions('Main', ['changeSearchType', 'getResults', 'changeQuery'])
+            ...mapActions('Main', ['changeSearchType', 'getResults', 'changeQuery', 'changePage'])
         },
         computed: {
             ...mapState('Main', {
@@ -58,6 +75,10 @@
             suggestions() {
                 const {key} = this.searchType;
                 return this.$store.state[key].suggestions;
+            },
+            pagination() {
+                const {key} = this.searchType;
+                return this.$store.state[key].pagination;
             }
         },
         components: {

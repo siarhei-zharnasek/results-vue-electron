@@ -3,6 +3,10 @@ import {api} from '../../helpers';
 const state = {
     appliedQuery: '',
     results: {},
+    pagination: {
+        currentPage: 1,
+        maxPage: 0
+    },
     suggestions: [],
     loading: false,
     error: ''
@@ -26,6 +30,9 @@ const mutations = {
     },
     SUGGESTIONS_SUCCEEDED(state, suggestions) {
         state.suggestions = suggestions;
+    },
+    CHANGE_PAGE(state, payload) {
+        state.pagination = payload;
     }
 };
 
@@ -36,7 +43,8 @@ const actions = {
     async getResults({commit, state}, query) {
         const payload = {
             queryKey: 'substance',
-            queryValue: query
+            queryValue: query,
+            currentPage: state.pagination.currentPage
         };
 
         commit('START_LOADING');
@@ -65,6 +73,30 @@ const actions = {
                 commit('ERROR', e.toString());
             }
         }
+    },
+    async changeResults({commit, state, dispatch}, query) {
+        if (state.appliedQuery !== query) {
+            await dispatch('getResults', query);
+            const maxPage = Math.ceil(state.results.totalHits / 20);
+            const payload = {
+                currentPage: 1,
+                maxPage
+            };
+            commit('CHANGE_PAGE', payload);
+        }
+    },
+    async changePage({commit, state, dispatch}, newPage) {
+        const {currentPage, maxPage} = state.pagination;
+
+        if (newPage > 0 && newPage !== currentPage && newPage < maxPage) {
+            const payload = {
+                currentPage: newPage,
+                maxPage
+            };
+            commit('CHANGE_PAGE', payload);
+            dispatch('getResults', state.appliedQuery);
+        }
+
     }
 };
 
