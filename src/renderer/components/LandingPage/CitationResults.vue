@@ -18,24 +18,26 @@
                     {{keyword}}
                 </span>
             </div>
-            <div class="block">
-                <div class="title">Journal Title</div>
-                <div class="text">{{result.publicationDetail.publicationname}}</div>
-            </div>
-            <div class="block">
-                <div class="title">Year</div>
-                <div class="text">{{result.publicationDetail.hasPublicationYear}}</div>
-            </div>
-            <div class="block">
-                <div class="title">Authors</div>
-                <span
-                        v-for="cr in result.creator"
-                        class="keyword"
-                >
+            <div v-if="result.publicationDetail">
+                <div class="block">
+                    <div class="title">Journal Title</div>
+                    <div class="text">{{result.publicationDetail.publicationname}}</div>
+                </div>
+                <div class="block">
+                    <div class="title">Year</div>
+                    <div class="text">{{result.publicationDetail.hasPublicationYear}}</div>
+                </div>
+                <div class="block">
+                    <div class="title">Authors</div>
+                    <span
+                            v-for="cr in result.creator"
+                            class="keyword"
+                    >
                     {{cr.name}}
                 </span>
+                </div>
             </div>
-            <div class="block">
+            <div class="block" v-if="result.provenance">
                 <div class="title">Source</div>
                 <div class="text">{{result.provenance.supplier.name}}</div>
             </div>
