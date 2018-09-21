@@ -22,13 +22,13 @@ const mutations = {
         state.loading = false;
     },
     RESULTS_SUCCEEDED(state, response) {
-        state.results = response;
+        state.results = {...response};
     },
     ERROR(state, error) {
         state.error = error;
     },
     CHANGE_PAGE(state, payload) {
-        state.pagination = payload;
+        state.pagination = {...payload};
     }
 };
 
@@ -58,12 +58,16 @@ const actions = {
     },
     async changeResults({commit, state, dispatch}, query) {
         if (state.appliedQuery !== query) {
-            await dispatch('getResults', query);
-            const maxPage = Math.ceil(state.results.totalHits / 20);
-            const payload = {
+            let payload = {
                 currentPage: 1,
-                maxPage
+                maxPage: state.maxPage
             };
+
+            commit('CHANGE_PAGE', payload);
+            await dispatch('getResults', query);
+
+            payload.maxPage = Math.ceil(state.results.totalHits / 20);
+
             commit('CHANGE_PAGE', payload);
         }
     },
