@@ -42,6 +42,7 @@
                 >
             </span>
         </div>
+        <facets v-bind:facetsData="facets"></facets>
         <results
             v-bind:searchType="searchType.key"
             v-bind:resultsData="resultsData.entities"
@@ -53,6 +54,7 @@
     import {mapState, mapActions} from 'vuex';
     import {constants} from '../../helpers';
     import Results from './Results';
+    import Facets from './Facets';
 
     export default {
         data() {
@@ -79,10 +81,15 @@
             pagination() {
                 const {key} = this.searchType;
                 return this.$store.state[key].pagination;
+            },
+            facets() {
+                const {key} = this.searchType;
+                return this.$store.state[key].facets;
             }
         },
         components: {
-            Results
+            Results,
+            Facets
         }
     }
 </script>
