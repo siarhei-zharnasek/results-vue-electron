@@ -34,6 +34,9 @@ const actions = {
     },
     changePage({state, dispatch}, page) {
         dispatch(`${state.searchType.key}/changePage`, page, {root: true});
+    },
+    toggleFacet({state, dispatch}, payload) {
+        dispatch(`${state.searchType.key}/toggleFacet`, payload, {root: true});
     }
 };
 

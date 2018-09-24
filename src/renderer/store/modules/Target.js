@@ -8,6 +8,7 @@ const state = {
         maxPage: 0
     },
     facets: {},
+    selectedFacets: {},
     loading: false,
     error: ''
 };
@@ -33,6 +34,9 @@ const mutations = {
     },
     FACETS_SUCCEEDED(state, response) {
         state.facets = {...response};
+    },
+    TOGGLE_FACET(state, selectedFacets) {
+        state.selectedFacets = selectedFacets;
     }
 };
 
@@ -50,7 +54,7 @@ const actions = {
         commit('START_LOADING');
 
         try {
-            const response = await api.searchResults(payload);
+            const response = await api.searchResults(payload, state.selectedFacets);
 
             commit('CHANGE_APPLIED_QUERY', query);
             commit('RESULTS_SUCCEEDED', response);
@@ -96,12 +100,30 @@ const actions = {
         };
 
         try {
-            const {facets} = await api.searchFacets(payload, state.facets);
+            const {facets} = await api.searchFacets(payload, state.selectedFacets);
 
             commit('FACETS_SUCCEEDED', facets);
         } catch (e) {
             commit('ERROR', e.toString());
         }
+    },
+    async toggleFacet({commit, state: {selectedFacets}}, {facetName, facetValue}) {
+        const currentFacet = selectedFacets[facetName] || [];
+        let newSelectedFacets;
+
+        if (currentFacet && currentFacet.includes(facetValue)) {
+            newSelectedFacets = {
+                ...selectedFacets,
+                [facetName]: currentFacet.filter(val => val !== facetValue)
+            }
+        } else {
+            newSelectedFacets = {
+                ...selectedFacets,
+                [facetName]: [...currentFacet, facetValue]
+            }
+        }
+
+        commit('TOGGLE_FACET', newSelectedFacets);
     }
 };
 

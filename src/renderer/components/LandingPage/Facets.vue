@@ -13,7 +13,11 @@
                     class="block"
                     v-for="el in facet.values"
                 >
-                    <div class="text">{{el.value}} - {{el.count}}</div>
+                    <div
+                        class="text"
+                        :class="computeActive(facet.filterKey, el.value)"
+                        @click="toggleFacet(facet.filterKey, el.value)"
+                    >{{el.value}} - {{el.count}}</div>
                 </div>
             </toggle-visibility>
         </div>
@@ -24,9 +28,18 @@
     import ToggleVisibility from './ToggleVisibility.vue';
 
     export default {
-        props: ['facetsData'],
+        props: ['facetsData', 'selectedFacetsData', 'toggleFacet'],
         components: {
             ToggleVisibility
+        },
+        methods: {
+            computeActive(facetName, facetValue) {
+                const facet = this.selectedFacetsData[facetName];
+
+                return {
+                    active: facet && facet.includes(facetValue)
+                }
+            }
         }
     }
 </script>
@@ -52,5 +65,9 @@
 
     .keyword {
         margin-right: 10px;
+    }
+
+    .active {
+        font-weight: bold;
     }
 </style>

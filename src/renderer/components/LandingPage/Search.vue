@@ -42,7 +42,11 @@
                 >
             </span>
         </div>
-        <facets v-bind:facetsData="facets"></facets>
+        <facets
+            v-bind:facetsData="facets"
+            v-bind:selectedFacetsData="selectedFacets"
+            v-bind:toggleFacet="facetClick"
+        ></facets>
         <results
             v-bind:searchType="searchType.key"
             v-bind:resultsData="resultsData.entities"
@@ -63,7 +67,12 @@
             }
         },
         methods: {
-            ...mapActions('Main', ['changeSearchType', 'getResults', 'changeQuery', 'changePage'])
+            ...mapActions('Main',
+                ['changeSearchType', 'getResults', 'changeQuery', 'changePage', 'toggleFacet']
+            ),
+            facetClick(facetName, facetValue) {
+                this.toggleFacet({facetName, facetValue});
+            }
         },
         computed: {
             ...mapState('Main', {
@@ -85,6 +94,10 @@
             facets() {
                 const {key} = this.searchType;
                 return this.$store.state[key].facets;
+            },
+            selectedFacets() {
+                const {key} = this.searchType;
+                return this.$store.state[key].selectedFacets;
             }
         },
         components: {
