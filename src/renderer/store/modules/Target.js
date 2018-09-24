@@ -7,6 +7,7 @@ const state = {
         currentPage: 1,
         maxPage: 0
     },
+    facets: {},
     loading: false,
     error: ''
 };
@@ -29,6 +30,9 @@ const mutations = {
     },
     CHANGE_PAGE(state, payload) {
         state.pagination = {...payload};
+    },
+    FACETS_SUCCEEDED(state, response) {
+        state.facets = {...response};
     }
 };
 
@@ -64,6 +68,7 @@ const actions = {
             };
 
             commit('CHANGE_PAGE', payload);
+            dispatch('getFacets', query);
             await dispatch('getResults', query);
 
             payload.maxPage = Math.ceil(state.results.totalHits / 20);
@@ -83,6 +88,20 @@ const actions = {
             dispatch('getResults', state.appliedQuery);
         }
 
+    },
+    async getFacets({commit, state}, query) {
+        const payload = {
+            queryKey: 'target',
+            queryValue: query
+        };
+
+        try {
+            const {facets} = await api.searchFacets(payload, state.facets);
+
+            commit('FACETS_SUCCEEDED', facets);
+        } catch (e) {
+            commit('ERROR', e.toString());
+        }
     }
 };
 
