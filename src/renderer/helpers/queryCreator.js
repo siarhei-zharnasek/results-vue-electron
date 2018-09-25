@@ -33,7 +33,7 @@ const createQueryParams = (searchType, query, facets) => {
     }
 
     for (const [key, values] of Object.entries(facets)) {
-        values.forEach(val => resultQuery += `&${key}=${val}`);
+        values.forEach(val => resultQuery += `&_filter.${key}=${val}`);
     }
 
     return resultQuery;

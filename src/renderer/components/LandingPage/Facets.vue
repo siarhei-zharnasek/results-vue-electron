@@ -34,7 +34,7 @@
         },
         methods: {
             computeActive(facetName, facetValue) {
-                const facet = this.selectedFacetsData[`_filter.${facetName}`];
+                const facet = this.selectedFacetsData[facetName];
 
                 return {
                     active: facet && facet.includes(facetValue)

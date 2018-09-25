@@ -114,19 +114,18 @@ const actions = {
         }
     },
     async toggleFacet({commit, dispatch, state: {selectedFacets, appliedQuery}}, {facetName, facetValue}) {
-        const newFacetName = `_filter.${facetName}`;
-        const currentFacet = selectedFacets[newFacetName] || [];
+        const currentFacet = selectedFacets[facetName] || [];
         let newSelectedFacets;
 
         if (currentFacet && currentFacet.includes(facetValue)) {
             newSelectedFacets = {
                 ...selectedFacets,
-                [newFacetName]: currentFacet.filter(val => val !== facetValue)
+                [facetName]: currentFacet.filter(val => val !== facetValue)
             }
         } else {
             newSelectedFacets = {
                 ...selectedFacets,
-                [newFacetName]: [...currentFacet, facetValue]
+                [facetName]: [...currentFacet, facetValue]
             }
         }
 
