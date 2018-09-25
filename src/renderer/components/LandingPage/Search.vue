@@ -45,7 +45,6 @@
         <facets
             v-bind:facetsData="facets"
             v-bind:selectedFacetsData="selectedFacets"
-            v-bind:toggleFacet="facetClick"
         ></facets>
         <results
             v-bind:searchType="searchType.key"
@@ -68,11 +67,8 @@
         },
         methods: {
             ...mapActions('Main',
-                ['changeSearchType', 'getResults', 'changeQuery', 'changePage', 'toggleFacet']
-            ),
-            facetClick(facetName, facetValue) {
-                this.toggleFacet({facetName, facetValue});
-            }
+                ['changeSearchType', 'getResults', 'changeQuery', 'changePage']
+            )
         },
         computed: {
             ...mapState('Main', {

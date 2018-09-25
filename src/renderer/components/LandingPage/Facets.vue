@@ -16,7 +16,7 @@
                     <div
                         class="text"
                         :class="computeActive(facet.filterKey, el.value)"
-                        @click="toggleFacet(facet.filterKey, el.value)"
+                        @click="facetClick(facet.filterKey, el.value)"
                     >{{el.value}} - {{el.count}}</div>
                 </div>
             </toggle-visibility>
@@ -25,14 +25,21 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex';
     import ToggleVisibility from './ToggleVisibility.vue';
 
     export default {
-        props: ['facetsData', 'selectedFacetsData', 'toggleFacet'],
+        props: ['facetsData', 'selectedFacetsData'],
         components: {
             ToggleVisibility
         },
         methods: {
+            ...mapActions('Main',
+                ['toggleFacet']
+            ),
+            facetClick(facetName, facetValue) {
+                this.toggleFacet({facetName, facetValue});
+            },
             computeActive(facetName, facetValue) {
                 const facet = this.selectedFacetsData[facetName];
 
