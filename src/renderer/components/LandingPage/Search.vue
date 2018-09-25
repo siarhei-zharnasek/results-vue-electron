@@ -79,25 +79,23 @@
                 searchType: ({searchType}) => searchType,
                 query: ({query}) => query
             }),
+            currentSearchEntity() {
+                return this.$store.state[this.searchType.key];
+            },
             resultsData() {
-                const {key} = this.searchType;
-                return this.$store.state[key].results;
+                return this.currentSearchEntity.results;
             },
             suggestions() {
-                const {key} = this.searchType;
-                return this.$store.state[key].suggestions;
+                return this.currentSearchEntity.suggestions;
             },
             pagination() {
-                const {key} = this.searchType;
-                return this.$store.state[key].pagination;
+                return this.currentSearchEntity.pagination;
             },
             facets() {
-                const {key} = this.searchType;
-                return this.$store.state[key].facets;
+                return this.currentSearchEntity.facets;
             },
             selectedFacets() {
-                const {key} = this.searchType;
-                return this.$store.state[key].selectedFacets;
+                return this.currentSearchEntity.selectedFacets;
             }
         },
         components: {
