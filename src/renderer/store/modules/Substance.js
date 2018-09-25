@@ -32,7 +32,10 @@ const mutations = {
         state.suggestions = [...suggestions];
     },
     CHANGE_PAGE(state, payload) {
-        state.pagination = {...payload};
+        state.pagination = {
+            ...state.pagination,
+            ...payload
+        };
     }
 };
 
@@ -55,6 +58,12 @@ const actions = {
             commit('CHANGE_APPLIED_QUERY', query);
             commit('RESULTS_SUCCEEDED', response);
             commit('STOP_LOADING');
+
+            let pagePayload = {
+                maxPage: Math.ceil(response.totalHits / 20)
+            };
+
+            commit('CHANGE_PAGE', pagePayload);
         } catch (e) {
             commit('ERROR', e.toString());
         }
@@ -76,28 +85,16 @@ const actions = {
     },
     async changeResults({commit, state, dispatch}, query) {
         if (state.appliedQuery !== query) {
-            let payload = {
-                currentPage: 1,
-                maxPage: state.maxPage
-            };
 
-            commit('CHANGE_PAGE', payload);
-            await dispatch('getResults', query);
-
-            payload.maxPage = Math.ceil(state.results.totalHits / 20);
-
-            commit('CHANGE_PAGE', payload);
+            commit('CHANGE_PAGE', {currentPage: 1});
+            dispatch('getResults', query);
         }
     },
     async changePage({commit, state, dispatch}, newPage) {
         const {currentPage, maxPage} = state.pagination;
 
         if (newPage > 0 && newPage !== currentPage && newPage < maxPage) {
-            const payload = {
-                currentPage: newPage,
-                maxPage
-            };
-            commit('CHANGE_PAGE', payload);
+            commit('CHANGE_PAGE', {currentPage: newPage});
             dispatch('getResults', state.appliedQuery);
         }
 

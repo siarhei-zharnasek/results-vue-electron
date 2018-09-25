@@ -30,7 +30,10 @@ const mutations = {
         state.error = error;
     },
     CHANGE_PAGE(state, payload) {
-        state.pagination = {...payload};
+        state.pagination = {
+            ...state.pagination,
+            ...payload
+        };
     },
     FACETS_SUCCEEDED(state, response) {
         state.facets = {...response};
@@ -59,35 +62,29 @@ const actions = {
             commit('CHANGE_APPLIED_QUERY', query);
             commit('RESULTS_SUCCEEDED', response);
             commit('STOP_LOADING');
+
+            let pagePayload = {
+                maxPage: Math.ceil(response.totalHits / 20)
+            };
+
+            commit('CHANGE_PAGE', pagePayload);
         } catch (e) {
             commit('ERROR', e.toString());
         }
     },
     async changeResults({commit, state, dispatch}, query) {
         if (state.appliedQuery !== query) {
-            let payload = {
-                currentPage: 1,
-                maxPage: state.maxPage
-            };
-
-            commit('CHANGE_PAGE', payload);
+            commit('CHANGE_PAGE', {currentPage: 1});
+            commit('TOGGLE_FACET', {});
             dispatch('getFacets', query);
-            await dispatch('getResults', query);
-
-            payload.maxPage = Math.ceil(state.results.totalHits / 20);
-
-            commit('CHANGE_PAGE', payload);
+            dispatch('getResults', query);
         }
     },
     async changePage({commit, state, dispatch}, newPage) {
         const {currentPage, maxPage} = state.pagination;
 
         if (newPage > 0 && newPage !== currentPage && newPage < maxPage) {
-            const payload = {
-                currentPage: newPage,
-                maxPage
-            };
-            commit('CHANGE_PAGE', payload);
+            commit('CHANGE_PAGE', {currentPage: newPage});
             dispatch('getResults', state.appliedQuery);
         }
     },
@@ -105,23 +102,27 @@ const actions = {
             commit('ERROR', e.toString());
         }
     },
-    async toggleFacet({commit, state: {selectedFacets}}, {facetName, facetValue}) {
-        const currentFacet = selectedFacets[facetName] || [];
+    async toggleFacet({commit, dispatch, state: {selectedFacets, appliedQuery}}, {facetName, facetValue}) {
+        const newFacetName = `_filter.${facetName}`;
+        const currentFacet = selectedFacets[newFacetName] || [];
         let newSelectedFacets;
 
         if (currentFacet && currentFacet.includes(facetValue)) {
             newSelectedFacets = {
                 ...selectedFacets,
-                [facetName]: currentFacet.filter(val => val !== facetValue)
+                [newFacetName]: currentFacet.filter(val => val !== facetValue)
             }
         } else {
             newSelectedFacets = {
                 ...selectedFacets,
-                [facetName]: [...currentFacet, facetValue]
+                [newFacetName]: [...currentFacet, facetValue]
             }
         }
 
         commit('TOGGLE_FACET', newSelectedFacets);
+        commit('CHANGE_PAGE', {currentPage: 1});
+        dispatch('getResults', appliedQuery);
+        dispatch('getFacets', appliedQuery);
     }
 };
 
