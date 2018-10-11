@@ -8,7 +8,7 @@ export const addPrefixToActions = (entityName, actions) => {
     return modifiedActions;
 };
 
-const URL = 'http://192.168.1.22:4200';
+const URL = 'http://172.20.10.3:4200';
 const SEARCH_URL = `${URL}/search/`;
 
 const createQueryParams = (searchType, query, facets) => {

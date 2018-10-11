@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div class="title">{{searchType.key}}</div>
         <select
             :value="searchType.key"
@@ -42,14 +42,19 @@
                 >
             </span>
         </div>
-        <facets
-            v-bind:facetsData="facets"
-            v-bind:selectedFacetsData="selectedFacets"
-        ></facets>
-        <results
-            v-bind:searchType="searchType.key"
-            v-bind:resultsData="resultsData.entities"
-        ></results>
+        <div class="content">
+            <div v-if="loading">
+                <Loading/>
+            </div>
+            <facets
+                v-bind:facetsData="facets"
+                v-bind:selectedFacetsData="selectedFacets"
+            ></facets>
+            <results
+                v-bind:searchType="searchType.key"
+                v-bind:resultsData="resultsData.entities"
+            ></results>
+        </div>
     </div>
 </template>
 
@@ -58,6 +63,7 @@
     import {constants} from '../../helpers';
     import Results from './Results';
     import Facets from './Facets';
+    import Loading from './Loading';
 
     export default {
         data() {
@@ -92,11 +98,15 @@
             },
             selectedFacets() {
                 return this.currentSearchEntity.selectedFacets;
+            },
+            loading() {
+                return this.currentSearchEntity.loading;
             }
         },
         components: {
             Results,
-            Facets
+            Facets,
+            Loading
         }
     }
 </script>
@@ -127,5 +137,18 @@
     .item .value {
         color: #35495e;
         font-weight: bold;
+    }
+
+    .container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .content {
+        position: relative;
+        flex: 1;
+        width: 100%;
     }
 </style>

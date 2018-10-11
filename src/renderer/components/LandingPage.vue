@@ -45,6 +45,7 @@
         min-height: 100vh;
         padding: 60px 80px;
         width: 100vw;
+        display: flex;
     }
 
     #logo {
