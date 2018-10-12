@@ -33,14 +33,14 @@
         />
         <div class="content">
             <Loading v-bind:showLoading="loading"/>
-            <facets
+            <Facets
                 v-bind:facetsData="facets"
                 v-bind:selectedFacetsData="selectedFacets"
-            ></facets>
-            <results
+            />
+            <Results
                 v-bind:searchType="searchType.key"
                 v-bind:resultsData="resultsData.entities"
-            ></results>
+            />
         </div>
     </div>
 </template>
