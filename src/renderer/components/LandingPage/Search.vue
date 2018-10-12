@@ -27,21 +27,10 @@
         </div>
         <button @click="getResults()">GET RESULTS</button>
         <div>{{resultsData.totalHits}}</div>
-        <div v-if="pagination.maxPage">
-            <span
-                v-if="pagination.currentPage > 1"
-                @click="changePage(pagination.currentPage - 1)"
-            >
-                <
-            </span>
-            <span>{{pagination.currentPage}} / {{pagination.maxPage}}</span>
-            <span
-                v-if="pagination.currentPage < pagination.maxPage"
-                @click="changePage(pagination.currentPage + 1)"
-            >
-                >
-            </span>
-        </div>
+        <Pagination
+            v-bind:data="pagination"
+            v-bind:changePage="changePage"
+        />
         <div class="content">
             <div v-if="loading">
                 <Loading/>
@@ -64,6 +53,7 @@
     import Results from './Results';
     import Facets from './Facets';
     import Loading from './Loading';
+    import Pagination from './Pagination';
 
     export default {
         data() {
@@ -106,7 +96,8 @@
         components: {
             Results,
             Facets,
-            Loading
+            Loading,
+            Pagination
         }
     }
 </script>
