@@ -32,9 +32,7 @@
             v-bind:changePage="changePage"
         />
         <div class="content">
-            <div v-if="loading">
-                <Loading/>
-            </div>
+            <Loading v-bind:showLoading="loading"/>
             <facets
                 v-bind:facetsData="facets"
                 v-bind:selectedFacetsData="selectedFacets"

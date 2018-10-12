@@ -1,11 +1,16 @@
 <template>
-    <div class="wrapper">
+    <div
+        class="wrapper"
+        v-if="showLoading"
+    >
         loading
     </div>
 </template>
 
 <script>
-    export default {}
+    export default {
+        props: ['showLoading']
+    }
 </script>
 
 <style scoped>
