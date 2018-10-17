@@ -48,12 +48,6 @@
         display: flex;
     }
 
-    #logo {
-        height: auto;
-        margin-bottom: 20px;
-        width: 420px;
-    }
-
     main {
         display: flex;
         justify-content: space-between;
@@ -61,29 +55,6 @@
 
     main > div {
         flex-basis: 50%;
-    }
-
-    .left-side {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .welcome {
-        color: #555;
-        font-size: 23px;
-        margin-bottom: 10px;
-    }
-
-    .title {
-        color: #2c3e50;
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 6px;
-    }
-
-    .title.alt {
-        font-size: 18px;
-        margin-bottom: 10px;
     }
 
     .doc p {
